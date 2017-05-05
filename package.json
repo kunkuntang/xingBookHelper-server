@@ -1,0 +1,22 @@
+{
+  "name": "xinghelper_server",
+  "version": "1.0.0",
+  "description": "the server of xinghelper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kunkuntang/xingHelper-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kunkuntang/xingHelper-server/issues"
+  },
+  "homepage": "https://github.com/kunkuntang/xingHelper-server#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
