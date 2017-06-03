@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var http = require('http');
+const https = require('https');
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -12,28 +12,16 @@ app.get('/', function (req, res) {
 
 app.post('/getSessionKey', function (req, res) {
   console.log('post server', req.body)
-  var url = 'https://api.weixin.qq.com/sns/jscode2session?appid=6636a71c682fc816bf7f4d3678561cff&secret=38ba10eb8d6a147e71bea44f696f3225&js_code=' + req.body.jsCode + '&grant_type=authorization_code'
-
+  var url = 'https://api.weixin.qq.com/sns/jscode2session?appid=wx5b7c2e620cd2e7ea&secret=75ebd780c4aa483bce0dc23072dd40bf&js_code=' + req.body.jsCode + '&grant_type=authorization_code'
+  requestWx(url, function(result) {
+    res.send(result)
+  })
 })
 
-function requestWx(url) {
-  http.get(url, function (res) {
+function requestWx(url, cb) {
+  https.get(url, function (res) {
     const statusCode = res.statusCode;
     const contentType = res.headers['content-type'];
-    let error;
-    if (statusCode !== 200) {
-      error = new Error(`Request Failed.\n` +
-        `Status Code: ${statusCode}`);
-    } else if (!/^application\/json/.test(contentType)) {
-      error = new Error(`Invalid content-type.\n` +
-        `Expected application/json but received ${contentType}`);
-    }
-    if (error) {
-      console.log(error.message);
-      // consume response data to free up memory
-      res.resume();
-      return;
-    }
 
     res.setEncoding('utf8');
     let rawData = '';
@@ -43,6 +31,7 @@ function requestWx(url) {
       try {
         let parsedData = JSON.parse(rawData);
         console.log(parsedData);
+        cb(parsedData)        
       } catch (e) {
         console.log(e.message);
       }
