@@ -18,6 +18,8 @@
   "homepage": "https://github.com/kunkuntang/xingHelper-server#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "wafer-node-session": "^1.0.10",
+    "connect-mongo": "^2.0.0"
   }
 }
