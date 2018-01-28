@@ -200,13 +200,13 @@ import util from '@/libs/util.js'
           let newMajorName = this.newMajorName
           util.ajax.post('addMajor', {selectedAcaId: this.selectedAcaId, newMajorName: newMajorName}).then((result) => {
               if (result.data.status === 1) {
-                  this.$Message.info('添加' + newMajorName + '成功');
+                  this.$Message.info(result.data.mes);
                   this.majorData.push({
                     name: newMajorName,
                     id: result.data.objectId
                   })
               } else {
-                  this.$Message.info('添加' + newMajorName + '失败');
+                  this.$Message.info(result.data.mes);
               }
               this.newMajorName = ''
           }).catch((error) => {

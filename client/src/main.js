@@ -17,42 +17,66 @@ Vue.use(iView);
 
 // 路由配置
 const RouterConfig = {
-    mode: 'history',
-    routes: Routers
+  mode: 'history',
+  routes: Routers
 };
 const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
-    iView.LoadingBar.start();
-    Util.title(to.meta.title);
-    next();
+  iView.LoadingBar.start();
+  Util.title(to.meta.title);
+  next();
 });
 
 router.afterEach(() => {
-    iView.LoadingBar.finish();
-    window.scrollTo(0, 0);
+  iView.LoadingBar.finish();
+  window.scrollTo(0, 0);
 });
 
 
 const store = new Vuex.Store({
-    state: {
-
+  state: {
+    userInfo: {},
+    majorArr: [],
+    academyArr: [],
+    bookListArr: [],
+    bookListId: '',
+    bookListName: ''
+  },
+  getters: {
+    userInfo: (state) => state.userInfo,
+    majorArr: (state) => state.majorArr,
+    academyArr: (state) => state.academyArr,
+    bookListArr: (state) => state.bookListArr,
+    bookListId: (state) => state.bookListId,
+  },
+  mutations: {
+    updateBookListId(state, newBookListId) {
+      state.bookListId = newBookListId
     },
-    getters: {
-
+    updateBookListArr(state, newBookListArr) {
+      state.bookListArr = newBookListArr
     },
-    mutations: {
-
+    updateAcademyArr(state, newAcademyArr) {
+      state.academyArr = newAcademyArr
     },
-    actions: {
-
+    updateMajorArr(state, newMajorArr) {
+      state.majorArr = newMajorArr
+    },
+    updateUserInfo(state, newUserInfo) {
+      console.log(newUserInfo)
+      state.userInfo = newUserInfo
     }
+  },
+  actions: {
+
+  }
 });
 
 
 new Vue({
-    el: '#app',
-    router: router,
-    store: store,
-    render: h => h(App)
+  el: '#app',
+  router: router,
+  store: store,
+  render: h => h(App)
 });
