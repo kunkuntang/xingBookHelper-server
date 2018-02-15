@@ -64,10 +64,6 @@
                             <Icon type="search"></Icon>
                             <span>通讯录</span>
                         </MenuItem>
-                        <MenuItem name="1-3">
-                            <Icon type="settings"></Icon>
-                            <span>Option 3</span>
-                        </MenuItem>
                     </MenuGroup>
                     <MenuGroup title="信息管理" v-if="isAdmin">
                         <MenuItem name="userManager">
@@ -84,6 +80,7 @@
             <Layout>
                 <Header :style="{padding: 0}" class="layout-header-bar">
                     <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0'}" type="navicon-round" size="24"></Icon>
+                    <span class="logoutBtn" @click="logout">登出</span>
                 </Header>
                 <Content :style="{margin: '20px', background: '#fff', minHeight: this.winH + 'px', position: 'relative'}">
                     <!-- <component v-bind:is="currentView" @changeView="changeContent" :data="comData">
@@ -102,7 +99,7 @@ import UserManager from '../components/userManager.vue'
 import GroupManager from '../components/groupManager'
 
 import util from '@/libs/util.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 const CONTACT = 'contact',
     BOOKHELPER = 'bookHelper',
@@ -124,15 +121,18 @@ export default {
     // if (!this.userInfo.stuNum) {
     //     this.$router.push({path: '/login'})
     // }
-        console.log(this.currentRoute)
     util.ajax.post('/checkLogin').then((result) => {
-        if(!result.data.status) {
+        let data = result.data
+        let userInfo = data.userInfo
+        if(!data.status) {
             this.$router.push({path: '/login'})
         }
+        console.log(data)
+        this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, belongMajorId: userInfo.belongMajor.objectId, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
+        if (this.userInfo.role >= 110 || userInfo.role >= 110) {
+            this.isAdmin = true
+        }
     })
-    if (this.userInfo.role) {
-        this.isAdmin = true
-    }
     this.winH =
       (window.innerHeight ||
         document.body.clientHeight ||
@@ -169,7 +169,15 @@ export default {
         this.currentView = name
         this.comData = comData
         this.$router.push({ path: name })
-    }
+    },
+    logout () {
+        util.ajax.get('/logout').then(response => {
+            this.$router.push({ path: '/login' })
+        })
+    },
+    ...mapMutations([
+        'updateUserInfo'
+    ])
   },
   components: {
       contact: Contact,
@@ -180,3 +188,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+    .logoutBtn{
+        line-height: 24px;
+        float: right;
+        font-size: 14px;
+        margin: 20px 25px 0 0;
+        cursor: pointer;
+    }
+</style>

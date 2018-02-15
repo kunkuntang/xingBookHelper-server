@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="bookListArr.length">
-            <Row :gutter="16" style="padding: 0 16px;">
+            <Row :gutter="16" style="padding: 9xp 25px 25px 25px;">
                 <Col span="24" style="margin-top: 16px;">
                     <Button type="primary" size="small" @click="addBookList">添加书单</Button>
                 </Col>                
@@ -13,7 +13,7 @@
                                 <Icon type="android-share-alt"></Icon>
                                 Share
                             </a>
-                            <p>专业：{{item.belongAcaName}} - {{item.belongMajName}}</p>
+                            <p>专业：{{item.belongMajor.belongAcademy.academyName}} - {{item.belongMajor.majorName}}</p>
                             <p>时间：{{showBookTime(item.updatedAt)}}</p>
                         </Card>
                     </div>

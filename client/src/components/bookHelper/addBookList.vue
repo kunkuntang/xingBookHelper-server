@@ -110,7 +110,8 @@ export default {
         computed: {
             ...mapState({
                 academyArr: 'academyArr',
-                majorArr: 'majorArr'
+                majorArr: 'majorArr',
+                userInfo: 'userInfo'
             })
         },
         beforeMount () {
@@ -182,6 +183,7 @@ export default {
                             belongMajName: selectedMajName,
                             belongMajId: this.selectedMajId,
                             containBooks: this.formData.items,
+                            belongUserId: this.userInfo.userId
                         }
                         console.log(newBookListData)
                         util.ajax.post('/addBookList', { newBookListData: newBookListData}).then((results) => {
@@ -233,7 +235,7 @@ export default {
         margin-top: 16px;
     }
     .addBookListCon {
-        padding: 0 16px 16px 16px;
+        padding: 9px 25px 25px 25px;
     }
     .table-con{
         margin: 16px 0;

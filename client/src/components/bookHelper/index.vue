@@ -1,5 +1,7 @@
 <template>
-    <component v-bind:is="currentView" @changeView="changeView" :comData="viewData"></component>
+    <div class="outcon" style="padding: 25px;">
+        <component v-bind:is="currentView" @changeView="changeView" :comData="viewData"></component>
+    </div>
 </template>
 <script>
 import ShowAllBookList from './showAllBookList.vue'

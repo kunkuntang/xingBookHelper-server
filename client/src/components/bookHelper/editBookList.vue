@@ -28,7 +28,7 @@
                 <label class="label-title">包含书本：</label>
             </Col>
             <Form ref="formData" :model="formData" style="width: 900px;">
-                <FormItem v-for="(item, index) in formData.items" :key="index">
+                <FormItem v-for="(item, index) in formData.items" :key="index" v-if="item.status">
                     <Col span="8">
                         <FormItem
                             :prop="'items.' + index + '.bookName'"
@@ -101,15 +101,21 @@ export default {
             if (!this.bookListId) {
                 this.bookListId = this.$route.query.bookListId
             }
-            util.ajax.get('/getBookListInfo?bookListId=' + this.bookListId).then(({data}) => {
-                this.bookListName = data.bookListName
-                this.selectedAcaId = data.belongAcaId
-                this.selectedMajId = data.belongMajId
-            })
+            // util.ajax.get('/getBookListInfo?bookListId=' + this.bookListId).then(({data}) => {
+            //     this.bookListName = data.bookListName
+            //     this.selectedAcaId = data.belongAcaId
+            //     this.selectedMajId = data.belongMajId
+            // })
             util.ajax.get('/getBooks?bookListId=' + this.bookListId).then(({data}) => {
                 console.log(data)
+                let bookListName, belongAcaName, belongAcaId, belongMajName, belongMajId
                 let tempData = []
                 data.forEach(el => {
+                    bookListName = el.belongBookList.bookListName
+                    belongMajName = el.belongBookList.belongMajor.majorName
+                    belongMajId = el.belongBookList.belongMajor.objectId
+                    belongAcaName = el.belongBookList.belongMajor.belongAcademy.academyName
+                    belongAcaId = el.belongBookList.belongMajor.belongAcademy.objectId
                     tempData.push({
                         bookId: el.objectId,
                         bookName: el.bookName,
@@ -121,6 +127,11 @@ export default {
                     })
                 });
                 this.formData.items = tempData
+                this.bookListName = bookListName
+                this.belongAcaName = belongAcaName
+                this.belongMajName = belongMajName
+                this.selectedAcaId = belongAcaId
+                this.selectedMajId = belongMajId
             })
             if (this.academyArr.length) {
                 this.academyList = this.academyArr
@@ -225,11 +236,12 @@ export default {
                             bookPrice: '',
                             bookDisc: '',
                             index: 1,
-                            status: 1
+                            status: 2
                         });
             },
             handleRemove (index) {
-                this.formData.items.splice(index, 1);
+                // this.formData.items.splice(index, 1);
+                this.formData.items[index].status = 0
             },
             resetForm () {
                 this.bookListName = ''
@@ -255,7 +267,7 @@ export default {
         margin-top: 16px;
     }
     .addBookListCon {
-        padding: 0 16px 16px 16px;
+        padding: 9px 25px 25px 25px;
     }
     .table-con{
         margin: 16px 0;
