@@ -1,8 +1,8 @@
 <template>
     <div>
         <div v-if="bookListArr.length">
-            <Row :gutter="16" style="padding: 9xp 25px 25px 25px;">
-                <Col span="24" style="margin-top: 16px;">
+            <Row :gutter="16" style="padding: 9px 25px 25px 25px">
+                <Col span="24" style="margin-top: 16px">
                     <Button type="primary" size="small" @click="addBookList">添加书单</Button>
                 </Col>                
                 <Col span="6" v-for="(item, index) in bookListArr" :key="index" style="margin-top: 16px; cursor: pointer;">

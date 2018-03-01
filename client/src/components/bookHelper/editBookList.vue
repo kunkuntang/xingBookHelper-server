@@ -198,8 +198,9 @@ export default {
                         });
                         let newBookListData = {
                             bookListName: this.bookListName,
+                            belongAcaName: selectedAcaName,                            
                             belongAcaId: this.selectedAcaId,
-                            belongAcaName: selectedAcaName,
+                            belongMajName: selectedMajName,                            
                             belongMajId: this.selectedMajId,                            
                             belongMajName: selectedMajName,
                             containBooks: this.formData.items,

@@ -74,6 +74,10 @@
                             <Icon type="settings"></Icon>
                             <span>群体管理</span>
                         </MenuItem>
+                        <MenuItem name="mapManager">
+                            <Icon type="settings"></Icon>
+                            <span>地图地点管理</span>
+                        </MenuItem>
                     </MenuGroup>
                 </Menu>
             </Sider>
@@ -83,8 +87,6 @@
                     <span class="logoutBtn" @click="logout">登出</span>
                 </Header>
                 <Content :style="{margin: '20px', background: '#fff', minHeight: this.winH + 'px', position: 'relative'}">
-                    <!-- <component v-bind:is="currentView" @changeView="changeContent" :data="comData">
-                    </component> -->
                     <router-view></router-view>
                 </Content>
             </Layout>
@@ -92,27 +94,15 @@
     </div>
 </template>
 <script>
-import Contact from '../components/contact.vue'
-import BookHelper from '../components/bookHelper'
-import AddBookList from '../components/bookHelper/addBookList'
-import UserManager from '../components/userManager.vue'
-import GroupManager from '../components/groupManager'
 
 import util from '@/libs/util.js'
 import { mapState, mapActions, mapMutations } from 'vuex'
-
-const CONTACT = 'contact',
-    BOOKHELPER = 'bookHelper',
-    GROUPMANAGER = 'groupManager',
-    USERMANAGER = 'userManager',
-    ADDBOOKLIST = 'addBookList'
 
 export default {
   data() {
     return {
       isCollapsed: false,
       winH: 500,
-      currentView: CONTACT,
       isAdmin: false,
       comData: ''
     };
@@ -142,10 +132,6 @@ export default {
     ...mapState({
         userInfo: 'userInfo'
     }),
-    changeView() {
-        console.log(this.currentRoute)
-        return this.changeContent(this.currentRoute)
-    },
     rotateIcon() {
       return ["menu-icon", this.isCollapsed ? "rotate-icon" : ""];
     },
@@ -157,17 +143,8 @@ export default {
     collapsedSider() {
       this.$refs.side1.toggleCollapse();
     },
-    changeContent (name, comData) {
+    changeContent (name) {
         console.log(name)
-        // switch (name) {
-        //     case 'contact': this.currentView = CONTACT; break;
-        //     case 'bookHelper': this.currentView = BOOKHELPER; break;
-        //     case 'groupManager': this.currentView = GROUPMANAGER; break;
-        //     case 'userManager': this.currentView = USERMANAGER; break;
-        //     case 'addBookList': this.currentView = AddBookList; break;
-        // }
-        this.currentView = name
-        this.comData = comData
         this.$router.push({ path: name })
     },
     logout () {
@@ -180,11 +157,6 @@ export default {
     ])
   },
   components: {
-      contact: Contact,
-      bookHelper: BookHelper,
-      groupManager: GroupManager,
-      userManager: UserManager,
-      addBookList: AddBookList
   }
 };
 </script>

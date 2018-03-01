@@ -24,7 +24,10 @@ const routers = [{
       component: (resolve) => require(['./components/userManager.vue'], resolve)
     }, {
       path: '/groupManager',
-      component: (resolve) => require(['./components/groupManager'], resolve)
+      component: (resolve) => require(['./components/groupManager.vue'], resolve)
+    }, {
+      path: '/mapManager',
+      component: (resolve) => require(['./components/mapManager.vue'], resolve)
     }]
   },
   {

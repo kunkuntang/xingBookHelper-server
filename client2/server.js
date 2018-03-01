@@ -130,6 +130,56 @@ app.get('/getMajorFromAca', (req, res) => {
   }
 })
 
+app.post('/addLocationCate', (req, res) => {
+  let newLocationCateName = req.body.newLocationCateName
+  console.log('newLocationCateName', newLocationCateName)
+  utils.ajax.post('mapCateList', { locationCateName: newLocationCateName }).then(({ data }) => {
+    console.log(data)
+    res.send({ status: 1, objectId: data.objectId, mes: '添加' + newLocationCateName + '成功' })
+  }).catch((err) => {
+    res.send({ status: 0, mes: '保存失败' })
+  })
+})
+
+app.post('/addLocation', (req, res) => {
+  let newLocationName = req.body.newLocationName
+  let selectedCateId = req.body.selectedCateId
+  let newLongitude = req.body.newLongitude
+  let newLatitude = req.body.newLatitude
+  console.log('selectedCateId', selectedCateId)
+  console.log('newLocationName', newLocationName)
+  console.log('newLongitude', newLongitude)
+  console.log('newLatitude', newLatitude)
+  utils.ajax.post('mapLocationList', { belongCate: { __type: "Pointer", className: "mapCateList", objectId: selectedCateId }, locationName: newLocationName, latitude: newLatitude, longitude: newLongitude }).then(({ data }) => {
+    console.log(data)
+    res.send({ status: 1, objectId: data.objectId, mes: '添加' + newLocationName + '成功' })
+  }).catch((err) => {
+    res.send({ status: 0, mes: '保存失败' })
+  })
+})
+
+app.get('/getLocationCateList', (req, res) => {
+  utils.ajax.get('mapCateList').then(({ data }) => {
+    console.log(data.results)
+    res.json(data.results)
+  }).catch(err => {
+    console.log('err', err)
+  })
+})
+
+app.get('/getLocationFromCate', (req, res) => {
+  let selectedCateId = req.query.selectedCateId
+  console.log(selectedCateId)
+  if (selectedCateId) {
+    utils.ajax.get('mapLocationList?where={"belongCate": { "__type": "Pointer", "className": "mapCateList", "objectId": "' + selectedCateId + '"} }').then(({ data }) => {
+      console.log(data.results)
+      res.json(data.results)
+    }).catch(err => {
+      console.log('err', err)
+    })
+  }
+})
+
 // 获取书单列表
 app.get('/getBookLists', (req, res) => {
   utils.ajax.get('bookList?include=belongMajor[majorName].belongAcademy[academyName]').then((response) => {
@@ -276,6 +326,16 @@ app.post('/updateBookList', (req, res) => {
               "bookName": element.bookName,
               "bookPrice": element.bookPrice,
               "bookDisc": element.bookDisc,
+              "belongAcademy": {
+                "__type": "Pointer",
+                "className": "academyList",
+                "objectId": newBookListData.belongAcaId
+              },
+              "belongMajor": {
+                "__type": "Pointer",
+                "className": "majorList",
+                "objectId": newBookListData.belongMajId
+              },
               "belongBookList": {
                 "__type": "Pointer",
                 "className": "bookList",

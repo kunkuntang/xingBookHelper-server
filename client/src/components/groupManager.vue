@@ -11,42 +11,36 @@
 <template>
 
   <div>
-    <Tabs value="name1">
-      <TabPane label="班级" icon="social-apple">
-        <div style="margin: 0 16px;">
-          <Row :gutter=16>
-            <Col span="12">
-              <span class="title">添加学院</span>
-              <Card class="card-con">
-                <div style="margin: 0 8px;">
-                  <Button type="primary" icon="ios-plus-empty" @click="addAcademy = true">添加学院</Button>
-                  <Table border :columns="academyColumns" :data="academyData"></Table>
-                </div>
-              </Card>
-            </Col>
-            <Col span="12">
-              <span class="title">添加专业</span>
-              <Card class="card-con">
-                <div style="margin: 0 16px;">
-                  <!-- <Table border :columns="columns7" :data="data6"></Table> -->
-                  <Select v-model="selectedAcaId" style="width:200px" clearable @on-change="getMajorFromAca">
-                    <Option v-for="item in academyData" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                  </Select>
-                  <Button type="primary" icon="ios-plus-empty" @click="addMajor = true">添加专业</Button>
-                  <Table border :columns="academyColumns" :data="majorData"></Table>
-                </div>
-              </Card>
-            </Col>
-          </Row>
-        </div>  
-      </TabPane>
-      <TabPane label="社团" icon="social-windows">
-        <div style="margin: 0 16px;">
-          <!-- <Table border :columns="columns7" :data="data6"></Table> -->
-          社团
-        </div> 
-      </TabPane>
-    </Tabs>
+    <div style="margin: 20px 16px;">
+      <Row :gutter=16>
+        <Col span="12">
+          <span class="title">添加学院</span>
+          <Card class="card-con">
+            <div style="margin: 0 8px;">
+              <div style="margin-bottom: 16px;">
+                <Button type="primary" icon="ios-plus-empty" @click="addAcademy = true">添加学院</Button>
+              </div>
+              <Table border :columns="academyColumns" :data="academyData"></Table>
+            </div>
+          </Card>
+        </Col>
+        <Col span="12">
+          <span class="title">添加专业</span>
+          <Card class="card-con">
+            <div style="margin: 0 16px;">
+              <!-- <Table border :columns="columns7" :data="data6"></Table> -->
+              <div style="margin-bottom: 16px;">
+                <Select v-model="selectedAcaId" style="width:200px" clearable @on-change="getMajorFromAca">
+                  <Option v-for="item in academyData" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+                <Button type="primary" icon="ios-plus-empty" @click="addMajor = true">添加专业</Button>
+              </div>
+              <Table border :columns="academyColumns" :data="majorData"></Table>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </div>  
     <Modal v-model="addAcademy" title="Common Modal dialog box title" @on-ok="addAcademyFunc" @on-cancel="cancel">
       <Input v-model="newAcademyName" placeholder="输入学院名称" style="width: 300px" :autofocus="true"></Input>
     </Modal>
