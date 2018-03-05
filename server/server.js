@@ -23,18 +23,6 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 // app.use(multer()); // for parsing multipart/form-data
 
-function resolvePath(dir) {
-  return path.resolve(__dirname, 'src', dir, dir + '.html')
-}
-
-function readHTMLFile(filename) {
-  return fs.readdirSync(resolve(filename), { encoding: 'utf8' })
-}
-
-function strToInt(str) {
-  return parseInt(str)
-}
-
 app.use(cookieParser())
 app.use(session({
   secret: 'bookHelper',
@@ -42,23 +30,6 @@ app.use(session({
   saveUninitialized: false,
   resave: false
 }))
-
-app.get('/', function(req, res, next) {
-  if (req.session.views) {
-    req.session.views++
-      res.setHeader('Content-Type', 'text/html')
-    res.write('<p>views: ' + req.session.views + '</p>')
-    res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
-    res.end()
-  } else {
-    req.session.views = 1
-    res.end('welcome to the session demo. refresh!')
-  }
-})
-
-app.use('/js', express.static(path.join(__dirname, 'public/js')));
-app.use('/css', express.static(path.join(__dirname, 'public/css')));
-app.use('/img', express.static(path.join(__dirname, 'public/img')));
 
 app.post('/checkLogin', (req, res) => {
   console.log('checkLogin: ', req.session.userInfo)

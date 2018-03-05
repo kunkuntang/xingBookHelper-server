@@ -125,6 +125,9 @@ export default {
         }
         this.userName = userInfo.stuName
         this.userAvatarUrl = userInfo.userAvatarUrl
+    }).catch(err => {
+        console.log(err)
+        this.$router.push({path: '/login'})        
     })
     this.winH =
       (window.innerHeight ||
