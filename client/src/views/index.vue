@@ -119,7 +119,7 @@ export default {
             this.$router.push({path: '/login'})
         }
         console.log(data)
-        this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, academyName: data.belongAcaName, belongMajorId: userInfo.belongMajor.objectId, majorName: data.belongMajorName, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
+        this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, academyName: userInfo.belongAcaName, belongMajorId: userInfo.belongMajor.objectId, majorName: userInfo.belongMajorName, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
         if (this.userInfo.role >= 110 || userInfo.role >= 110) {
             this.isAdmin = true
         }

@@ -6,8 +6,8 @@ let util = {
 
 util.ajax = axios.create({
   headers: {
-    'X-Bmob-Application-Id': '6636a71c682fc816bf7f4d3678561cff',
-    'X-Bmob-REST-API-Key': '05ea04f70d33f065e52ded897c5f4765',
+    'X-Bmob-Application-Id': '',
+    'X-Bmob-REST-API-Key': '',
     'Content-Type': 'application/json'
   },
   baseURL: 'https://api.bmob.cn/1/classes',

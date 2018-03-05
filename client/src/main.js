@@ -55,6 +55,7 @@ const store = new Vuex.Store({
       state.bookListId = newBookListId
     },
     updateBookListArr(state, newBookListArr) {
+      console.log(newBookListArr)
       state.bookListArr = newBookListArr
     },
     updateAcademyArr(state, newAcademyArr) {
