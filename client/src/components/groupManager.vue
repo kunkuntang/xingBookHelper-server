@@ -35,7 +35,7 @@
                 </Select>
                 <Button type="primary" icon="ios-plus-empty" @click="addMajor = true">添加专业</Button>
               </div>
-              <Table border :columns="academyColumns" :data="majorData"></Table>
+              <Table border :columns="majorColumns" :data="majorData"></Table>
             </div>
           </Card>
         </Col>
@@ -87,7 +87,7 @@ import util from '@/libs/util.js'
                   },
                   on: {
                     click: () => {
-                      this.remove(params.index)
+                      this.removeAca(params.index)
                     }
                   }
                 }, '删除')
@@ -124,10 +124,10 @@ import util from '@/libs/util.js'
                   },
                   on: {
                     click: () => {
-                      this.remove(params.index)
+                      this.removeMajor(params.index)
                     }
                   }
-                })
+                }, '删除')
               ])
             }
           }],
@@ -163,8 +163,29 @@ import util from '@/libs/util.js'
         }
       },
       methods: {
-        remove (index) {
-          this.academyData.splice(index, 1);
+        removeMajor (index) {
+          console.log('removeMaj idx', index)
+          let majorId = this.majorData[index].id
+          util.ajax.post('/delMajor', { majorId }).then(({data}) => {
+            if (data.status) {
+              this.majorData.splice(index, 1);
+              this.$Message.info('删除成功');
+            } else {
+              this.$Message.info('删除失败');              
+            }
+          })
+        },
+        removeAca (index) {
+          console.log('removeAca idx', index)
+          let academyId = this.academyData[index].id
+          util.ajax.post('/delAcademy', { academyId }).then(({data}) => {
+            if (data.status) {
+              this.academyData.splice(index, 1);
+              this.$Message.info('删除成功');
+            } else {
+              this.$Message.info('删除失败');              
+            }
+          })
         },
         collapsedSider() {
           this.$refs.side1.toggleCollapse();

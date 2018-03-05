@@ -85,6 +85,8 @@
                 <Header :style="{padding: 0}" class="layout-header-bar">
                     <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0'}" type="navicon-round" size="24"></Icon>
                     <span class="logoutBtn" @click="logout">登出</span>
+                    <span style="float:right; margin-right: 15px; font-size: 16px;">{{userName}}</span>
+                    <img src="{userAvatarUrl}" alt="" style="avataorImg">
                 </Header>
                 <Content :style="{margin: '20px', background: '#fff', minHeight: this.winH + 'px', position: 'relative'}">
                     <router-view></router-view>
@@ -104,13 +106,12 @@ export default {
       isCollapsed: false,
       winH: 500,
       isAdmin: false,
-      comData: ''
+      comData: '',
+      userName: '',
+      userAvatarUrl: ''
     };
   },
   beforeMount: function() {
-    // if (!this.userInfo.stuNum) {
-    //     this.$router.push({path: '/login'})
-    // }
     util.ajax.post('/checkLogin').then((result) => {
         let data = result.data
         let userInfo = data.userInfo
@@ -118,10 +119,12 @@ export default {
             this.$router.push({path: '/login'})
         }
         console.log(data)
-        this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, belongMajorId: userInfo.belongMajor.objectId, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
+        this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, academyName: data.belongAcaName, belongMajorId: userInfo.belongMajor.objectId, majorName: data.belongMajorName, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
         if (this.userInfo.role >= 110 || userInfo.role >= 110) {
             this.isAdmin = true
         }
+        this.userName = userInfo.stuName
+        this.userAvatarUrl = userInfo.userAvatarUrl
     })
     this.winH =
       (window.innerHeight ||
@@ -168,5 +171,15 @@ export default {
         font-size: 14px;
         margin: 20px 25px 0 0;
         cursor: pointer;
+        padding: 0 5px;
+        border-radius: 3px;
+        background-color: #dddfe0;
+    }
+    .logoutBtn:hover{
+        background-color: #cacaca;
+    }
+    .avataorImg{
+        width: 24px;
+        height: 24px;
     }
 </style>

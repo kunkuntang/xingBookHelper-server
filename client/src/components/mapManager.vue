@@ -33,7 +33,7 @@
                 <Select v-model="selectedCateId" style="width:200px; margin-right: 15px" clearable @on-change="getLocationFromCate">
                     <Option v-for="item in locationCateData" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
-                <Button type="primary" icon="ios-plus-empty" @click="addLocation = true">添加专业</Button>
+                <Button type="primary" icon="ios-plus-empty" @click="addLocation = true">添加地点</Button>
                 </div>
                 <Table border :columns="locationColumns" :data="locationData"></Table>
             </div>
@@ -103,17 +103,14 @@ import util from '@/libs/util.js'
                     },
                     on: {
                         click: () => {
-                        this.remove(params.index)
+                            this.removeCate(params.index)
                         }
                     }
                     }, '删除')
                 ]);
                 }
             }],
-            locationCateData: [{
-                name: '',
-                id: ''
-            }],
+            locationCateData: [],
             selectedCateId: '',
             locationColumns: [{
                 title: '地点名称',
@@ -140,7 +137,7 @@ import util from '@/libs/util.js'
                     },
                     on: {
                         click: () => {
-                        this.remove(params.index)
+                        this.removeLocation(params.index)
                         }
                     }
                     }, '删除')
@@ -178,8 +175,35 @@ import util from '@/libs/util.js'
         }
       },
       methods: {
-        remove (index) {
-          this.locationCateData.splice(index, 1);
+        removeCate (index) {
+          let cateId = this.locationCateData[index].id
+          console.log(cateId)
+          util.ajax.delete('delLocationCate?cateId=' + cateId ).then(({data}) => {
+              if (data.status) {
+                  this.$Message.info('删除成功');                
+                  this.locationCateData.splice(index, 1);
+                  this.locationData = []
+              } else{
+                  this.$Message.error('删除失败')
+              }
+          }).catch(err => {
+              console.log(err)
+              this.$Message.error('删除失败')
+          })
+        },
+        removeLocation (index) {
+            let locationId = this.locationData[index].id
+            util.ajax.delete('delLocation?locationId=' + locationId).then(({data}) => {
+                if (data.status) {
+                    this.$Message.info('删除成功');                
+                    this.locationData.splice(index, 1);
+              } else{
+                  this.$Message.error('删除失败')
+              }
+          }).catch(err => {
+              console.log(err)
+              this.$Message.error('删除失败')
+          })
         },
         addLoctionCateFunc() {
           console.log(this.newLocationCateName)
@@ -232,7 +256,8 @@ import util from '@/libs/util.js'
         getLocationFromCate() {
           console.log('triggle by select change')
           console.log(this.selectedCateId)
-          util.ajax.get('getLocationFromCate', {params: {selectedCateId: this.selectedCateId}}).then((results) => {
+          if (this.selectedCateId) {
+            util.ajax.get('getLocationFromCate', {params: {selectedCateId: this.selectedCateId}}).then((results) => {
             let tempArr = []
             let data = results.data
             let len = data.length
@@ -248,6 +273,7 @@ import util from '@/libs/util.js'
             }).catch((err)=> {
                 console.log(err)
             })
+          }
         }
       }
   }

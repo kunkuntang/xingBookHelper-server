@@ -22,11 +22,11 @@ export default {
             })
         },
         beforeMount () {
-            util.ajax.post('/checkLogin').then((result) => {
-                if(!result.data.status) {
-                    this.$router.push({path: '/login'})
-                }
-            })
+            // util.ajax.post('/checkLogin').then((result) => {
+            //     if(!result.data.status) {
+            //         this.$router.push({path: '/login'})
+            //     }
+            // })
         },
         mounted() {
 
