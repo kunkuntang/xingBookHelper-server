@@ -7,8 +7,9 @@
     </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import util from '@/libs/util.js'
+import axios from 'axios'
 
 export default {
         data() {
@@ -17,16 +18,24 @@ export default {
             };
         },
         computed: {
-            ...mapState({
-                userInfo: 'userInfo'
-            })
+            
         },
         beforeMount () {
-            // util.ajax.post('/checkLogin').then((result) => {
-            //     if(!result.data.status) {
-            //         this.$router.push({path: '/login'})
-            //     }
-            // })
+
+            util.ajax.post('/checkLogin').then((result) => {
+                let data = result.data
+                let userInfo = data.userInfo
+                if(!data.status) {
+                    this.$router.push({path: '/login'})
+                } else {
+                    console.log(data)
+                    this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, academyName: userInfo.belongAcaName, belongMajorId: userInfo.belongMajor.objectId, majorName: userInfo.belongMajorName, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
+                    this.$router.push({path: '/'})                    
+                }
+            }).catch(err => {
+                console.log(err)
+                // this.$router.push({path: '/login'})        
+            })
         },
         mounted() {
 
@@ -35,7 +44,9 @@ export default {
 
         },
         methods: {
-
+            ...mapMutations([
+                'updateUserInfo'
+            ])
         }
     };
 </script>

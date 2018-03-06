@@ -7,6 +7,7 @@ import util from './libs/util';
 import App from './app.vue';
 import 'iview/dist/styles/iview.css';
 
+import env from './config/env';
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -17,7 +18,8 @@ Vue.use(iView);
 
 // 路由配置
 const RouterConfig = {
-  mode: 'history',
+  mode: 'hash',
+  base: env === 'production' ? '/gcuHelper' : '/',
   routes: Routers
 };
 const router = new VueRouter(RouterConfig);

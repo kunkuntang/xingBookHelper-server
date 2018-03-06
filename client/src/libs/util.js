@@ -13,8 +13,8 @@ const ajaxUrl = env === 'development' ?
   'http://127.0.0.1:8010' :
   env === 'production' ?
   // 'http://127.0.0.1:8010' :
-  'http://www.lenkuntang.cn:8010' :
-  'https://debug.lenkuntang.cn:8010';
+  'http://lenkuntang.cn:802' :
+  'https://debug.lenkuntang.cn:802';
 
 util.ajax = axios.create({
   baseURL: ajaxUrl,

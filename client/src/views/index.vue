@@ -86,7 +86,7 @@
                     <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0'}" type="navicon-round" size="24"></Icon>
                     <span class="logoutBtn" @click="logout">登出</span>
                     <span style="float:right; margin-right: 15px; font-size: 16px;">{{userName}}</span>
-                    <img src="{userAvatarUrl}" alt="" style="avataorImg">
+                    <img :src="userAvatarUrl" alt="" class="avataorImg">
                 </Header>
                 <Content :style="{margin: '20px', background: '#fff', minHeight: this.winH + 'px', position: 'relative'}">
                     <router-view></router-view>
@@ -112,27 +112,37 @@ export default {
     };
   },
   beforeMount: function() {
-    util.ajax.post('/checkLogin').then((result) => {
-        let data = result.data
-        let userInfo = data.userInfo
-        if(!data.status) {
-            this.$router.push({path: '/login'})
-        }
-        console.log(data)
-        this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, academyName: userInfo.belongAcaName, belongMajorId: userInfo.belongMajor.objectId, majorName: userInfo.belongMajorName, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
-        if (this.userInfo.role >= 110 || userInfo.role >= 110) {
-            this.isAdmin = true
-        }
-        this.userName = userInfo.stuName
-        this.userAvatarUrl = userInfo.userAvatarUrl
-    }).catch(err => {
-        console.log(err)
-        this.$router.push({path: '/login'})        
-    })
+    // util.ajax.post('/checkLogin').then((result) => {
+    //     let data = result.data
+    //     let userInfo = data.userInfo
+    //     if(!data.status) {
+    //         this.$router.push({path: '/login'})
+    //     }
+    //     console.log(data)
+    //     this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, academyName: userInfo.belongAcaName, belongMajorId: userInfo.belongMajor.objectId, majorName: userInfo.belongMajorName, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
+    //     if (this.userInfo.role >= 110 || userInfo.role >= 110) {
+    //         this.isAdmin = true
+    //     }
+    //     this.userName = userInfo.stuName
+    //     this.userAvatarUrl = userInfo.userAvatarUrl
+    // }).catch(err => {
+    //     console.log(err)
+    //     this.$router.push({path: '/login'})        
+    // })
+    
     this.winH =
       (window.innerHeight ||
         document.body.clientHeight ||
         document.documentElement.clientHeight) - 104;
+  },
+  mounted: function() {
+    setTimeout(() => {
+        if (this.userInfo.role || this.userInfo.role >= 110) {
+            this.isAdmin = true
+        }
+        this.userName = this.userInfo.stuName
+        this.userAvatarUrl = this.userInfo.userAvatarUrl
+    }, 500);
   },
   computed: {
     ...mapState({
@@ -182,7 +192,11 @@ export default {
         background-color: #cacaca;
     }
     .avataorImg{
-        width: 24px;
-        height: 24px;
+        width: 40px;
+        height: 40px;
+        float: right;
+        border-radius: 100%;
+        margin-right: 5px;
+        margin-top: 13px;
     }
 </style>
