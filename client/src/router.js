@@ -4,7 +4,8 @@ const routers = [{
 }, {
   path: '/',
   meta: {
-    title: ''
+    title: '',
+    components: (resolve) => require(['./components/dashboard.vue'], resolve)
   },
   component: (resolve) => require(['./views/index.vue'], resolve),
   children: [{
@@ -31,6 +32,12 @@ const routers = [{
   }, {
     path: '/mapManager',
     component: (resolve) => require(['./components/mapManager.vue'], resolve)
+  }, {
+    path: '/userCenter',
+    component: (resolve) => require(['./components/userCenter.vue'], resolve)
+  }, {
+    path: '/scopeManager',
+    component: (resolve) => require(['./components/scopeManager.vue'], resolve)
   }]
 }];
 export default routers;

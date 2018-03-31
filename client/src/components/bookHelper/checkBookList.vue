@@ -189,7 +189,7 @@
                 this.belongMajId = belongMajId
 
                 let tempUserInfos = []
-                util.ajax.get('/userInfo?belongMajId=' + belongMajId).then((results) => {
+                util.ajax.get('/getContactInfo?belongMajId=' + belongMajId).then((results) => {
                     results.data.forEach((result) => {
                         tempUserInfos.push({
                             stuName: result.stuName,

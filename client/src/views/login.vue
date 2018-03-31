@@ -40,7 +40,18 @@ import { mapMutations } from 'vuex'
           util.ajax.post('/login',{ stuNum: this.userName, password: this.password }).then(({data}) => {
             if (data.status === 1) {
               this.$Message.success('登陆成功！');
-              this.updateUserInfo({ stuName: data.stuName, stuNum: data.stuNum, userAvatarUrl: data.avatarUrl, academyName: data.belongAcaName, belongMajorId: data.belongMajor.objectId, majorName: data.belongMajorName, belongClass: data.belongClass, role: data.role, userId: data.objectId })
+              this.updateUserInfo({
+                stuName: data.stuName,
+                stuNum: data.stuNum,
+                userAvatarUrl: data.avatarUrl,
+                academyName: data.belongAcaName,
+                belongMajorId: data.belongMajor.objectId,
+                majorName: data.belongMajorName,
+                belongClass: data.belongClass,
+                role: data.role,
+                userId: data.objectId,
+                sessionToken: data.sessionToken
+              })
               this.$router.push({path: '/'})
             } else {
               this.$Message.error('用户名或密码错误！');

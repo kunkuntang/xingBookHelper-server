@@ -64,6 +64,10 @@
                             <Icon type="search"></Icon>
                             <span>通讯录</span>
                         </MenuItem>
+                        <MenuItem name="userCenter">
+                            <Icon type="settings"></Icon>
+                            <span>个人设置</span>
+                        </MenuItem>
                     </MenuGroup>
                     <MenuGroup title="信息管理" v-if="isAdmin">
                         <MenuItem name="userManager">
@@ -77,6 +81,10 @@
                         <MenuItem name="mapManager">
                             <Icon type="settings"></Icon>
                             <span>地图地点管理</span>
+                        </MenuItem>
+                        <MenuItem name="scopeManager">
+                            <Icon type="settings"></Icon>
+                            <span>权限管理</span>
                         </MenuItem>
                     </MenuGroup>
                 </Menu>

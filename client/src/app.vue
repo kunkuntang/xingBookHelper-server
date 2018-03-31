@@ -29,7 +29,18 @@ export default {
                     this.$router.push({path: '/login'})
                 } else {
                     console.log(data)
-                    this.updateUserInfo({ stuName: userInfo.stuName, stuNum: userInfo.stuNum, userAvatarUrl: userInfo.avatarUrl, academyName: userInfo.belongAcaName, belongMajorId: userInfo.belongMajor.objectId, majorName: userInfo.belongMajorName, belongClass: userInfo.belongClass, role: userInfo.role || 0, userId: userInfo.objectId })
+                    this.updateUserInfo({
+                        stuName: userInfo.stuName,
+                        stuNum: userInfo.stuNum,
+                        userAvatarUrl: userInfo.avatarUrl,
+                        academyName: userInfo.belongAcaName,
+                        belongMajorId: userInfo.belongMajor.objectId,
+                        majorName: userInfo.belongMajorName,
+                        belongClass: userInfo.belongClass,
+                        role: userInfo.role || 0,
+                        sessionToken: userInfo.sessionToken,
+                        userId: userInfo.objectId
+                    })
                     this.$router.push({path: '/'})                    
                 }
             }).catch(err => {

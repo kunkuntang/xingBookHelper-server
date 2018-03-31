@@ -12,15 +12,18 @@
             <Col span="24">
             <label class="label-title">专业班级：</label>
             </Col>
-            <Col span="6">
+            <Col span="4">
                 <Select v-model="selectedAcaId" style="max-width: 300px;" clearable @on-change="getMajorFromAca">
                     <Option v-for="item in academyList" :value="item.academyId" :key="item.academyId">{{ item.academyName }}</Option>
                 </Select>
             </Col>
-            <Col span="6">
+            <Col span="4">
                 <Select v-model="selectedMajId" style="max-width: 300px;" clearable>
                     <Option v-for="item in majorList" :value="item.majorId" :key="item.majorId">{{ item.majorName }}</Option>
                 </Select>
+            </Col>
+            <Col span="4">
+                <Input type="text" v-model="belongClass" placeholder="" disabled></Input>
             </Col>
         </Row>
         <Row :gutter="16" class="row">
@@ -91,10 +94,14 @@ export default {
             };
         },
         computed: {
+            belongClass () {
+                return this.userInfo.belongClass + "班"
+            },
             ...mapState({
                 academyArr: 'academyArr',
                 majorArr: 'majorArr',
-                bookListArr: 'bookListArr'
+                bookListArr: 'bookListArr',
+                userInfo: 'userInfo'
             })
         },
         beforeMount () {
@@ -108,7 +115,7 @@ export default {
             // })
             util.ajax.get('/getBooks?bookListId=' + this.bookListId).then(({data}) => {
                 console.log(data)
-                let bookListName, belongAcaName, belongAcaId, belongMajName, belongMajId
+                let bookListName, belongAcaName, belongAcaId, belongMajName, belongMajId, belongClass
                 let tempData = []
                 data.forEach(el => {
                     bookListName = el.belongBookList.bookListName
