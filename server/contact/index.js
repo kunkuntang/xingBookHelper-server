@@ -19,8 +19,8 @@ const getUserList = (req, res) => {
   let classNum = req.query.classNum
   console.log(majorId)
   console.log(classNum)
-  utils.bookAjax.get('/_User?where={ "belongMajor": { "__type": "Pointer", "className": "majorList", "objectId": "' + majorId + '"}}&where={"belongClass": ' + classNum + '}').then(({ data }) => {
-    console.log(data)
+  utils.bookAjax.get('/_User?where={ "belongMajor": { "__type": "Pointer", "className": "majorList", "objectId": "' + majorId + '"}}&where={"belongClass": ' + classNum + '}&include=belongUserRole').then(({ data }) => {
+    console.log('getUserListData', data)
     res.send({ status: 1, data: data.results })
   })
 }

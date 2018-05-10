@@ -56,6 +56,45 @@ export default {
         {
           title: "电话",
           key: "stuPhone"
+        },
+        {
+          title: '审核',
+          render: (h, params) => {
+            console.log(params)
+            let applyClassStatus = params.row.applyClassStatus
+            if (applyClassStatus == 2) {
+              return h('span', '已通过')
+            } else if (applyClassStatus == 1) {
+              return h('div', [
+                h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.pass(params.index)
+                  }
+                },
+              }, '通过'),
+              h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.deny(params.index)
+                  }
+                },
+              }, '驳回')])
+            } else if (applyClassStatus == 0) {
+              return h('span', '已驳回')
+            }
+          }
         }
       ],
       userData: [
@@ -63,7 +102,8 @@ export default {
           stuName: "",
           stuPhone: "",
           stuNum: "",
-          id: ""
+          id: "",
+          belongUserRole: "",
         }
       ]
     };
@@ -84,11 +124,14 @@ export default {
         console.log(data);
 
         for (var i = 0; i < len; i++) {
+          if (data[i].belongUserRole.applyClassStatus != -1 && data[i].objectId != this.userInfo.userId)
           tempArr.push({
             stuName: data[i].stuName,
             stuPhone: data[i].stuPhone,
             stuNum: data[i].stuNum,
-            id: data[i].objectId
+            id: data[i].objectId,
+            applyClassStatus: data[i].belongUserRole.applyClassStatus,
+            belongUserRole: data[i].belongUserRole.objectId
           });
         }
         this.userData = tempArr;
@@ -109,8 +152,34 @@ export default {
     }
   },
   methods: {
-    remove(index) {
-      this.academyData.splice(index, 1);
+    pass(index) {
+      // this.academyData.splice(index, 1);
+      // this.ajax.post()
+      console.log(this.userData[index])
+      let userRoleId = this.userData[index].belongUserRole
+      util.ajax.post('passJoinRequest', { userRoleId }).then(data => {
+        console.log(data)
+        if (data.status == 200) {
+          this.$Message.info('已通过')
+          this.userData[index].applyClassStatus = 2
+        } else {
+          this.$Message.info('操作失败')
+        } 
+      })
+    },
+    deny(index) {
+      console.log(this.userData[index])
+      let userRoleId = this.userData[index].belongUserRole
+      util.ajax.post('denyJoinRequest', { userRoleId }).then(data => {
+        if (data.status == 200) {
+          this.$Message.info('已驳回')
+          this.userData[index].applyClassStatus = 0
+        } else {
+          this.$Message.info('操作失败')
+        } 
+      }).catch(err => {
+        console.log(err)
+      })
     },
     collapsedSider() {
       this.$refs.side1.toggleCollapse();

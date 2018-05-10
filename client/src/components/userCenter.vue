@@ -210,7 +210,6 @@ export default {
       util.ajax.post('updateUserScope', {
         sessionToken: this.$store.state.userInfo.sessionToken,
         userId: this.$store.state.userInfo.userId,
-        scopeStatus: 1,
         scoped: JSON.stringify(this.scopeSettingForm.scoped),
         position: this.scopeSettingForm.position
       }).then(({data}) => {

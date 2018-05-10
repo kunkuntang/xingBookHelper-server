@@ -76,11 +76,14 @@ export default {
         {
             title: '操作',
             key: 'action',
-            width: 120,
+            width: 130,
             align: 'center',
             render: (h, params) => {
-              return h('div', [
-                  h('Button', {
+              console.log(params.row)
+              let scopeStatus = params.row.scopeStatus
+              let content = []
+              if (scopeStatus != 2) {
+                content.push(h('Button', {
                   props: {
                     type: 'primary',
                     size: 'small'
@@ -93,8 +96,10 @@ export default {
                       this.passScope(params.index)
                     }
                   }
-                }, '通过'),
-                h('Button', {
+                }, '通过'))
+              }
+              if (scopeStatus != 0) {
+                content.push(h('Button', {
                   props: {
                     type: 'error',
                     size: 'small'
@@ -104,15 +109,16 @@ export default {
                       this.denyScope(params.index)
                     }
                   }
-                }, '驳回')
-              ]);
+                }, '驳回'))
+              }
+              return h('div', content);
             }
           }
       ],
       scopeData: []
     };
   },
-  created() {
+  mounted() {
     util.ajax
       .get("/getUserScope")
       .then(({data}) => {
@@ -120,15 +126,17 @@ export default {
         data.results.forEach(el => {
           let applyScope = JSON.parse(el.scoped).join("、");
           console.log('applyScope', applyScope)
-          this.scopeData.push({
-            stuName: el.belongUser.stuName,
-            stuNum: el.belongUser.stuNum,
-            majorName: el.belongUser.belongMajorName,
-            belongClass: el.belongUser.belongClass,
-            applyScope: applyScope,
-            userId: el.belongUser.objectId,
-            scopeStatus: el.scopeStatus
-          });
+          if (el.belongUser.objectId != this.$store.state.userInfo.userId) {
+            this.scopeData.push({
+              stuName: el.belongUser.stuName,
+              stuNum: el.belongUser.stuNum,
+              majorName: el.belongUser.belongMajorName,
+              belongClass: el.belongUser.belongClass,
+              applyScope: applyScope,
+              userId: el.belongUser.objectId,
+              scopeStatus: el.scopeStatus
+            });
+          }
         });
       })
       .catch(err => {
@@ -137,20 +145,20 @@ export default {
   },
   methods: {
     passScope(index) {
-        let userId = this.scopeData[index].userId
-        let sessionToken = this.$store.state.userInfo.sessionToken
-  console.log(sessionToken)
-        util.ajax.post('/passScope', { userId, sessionToken }).then(({data}) => {
-            console.log(data)
-            this.scopeData[index].scopeStatus = 2
-        })
+      let userId = this.scopeData[index].userId
+      let sessionToken = this.$store.state.userInfo.sessionToken
+      console.log(sessionToken)
+      util.ajax.post('/passScope', { userId, sessionToken }).then(({data}) => {
+          console.log(data)
+          this.scopeData[index].scopeStatus = 2
+      })
     },
     denyScope(index) {
-        let userId = this.scopeData[index].userId
-        let sessionToken = this.$store.state.userInfo.sessionToken
-        util.ajax.post('/denyScope', { userId, sessionToken }).then(({data}) => {
-            this.scopeData[index].scopeStatus = 0
-        })
+      let userId = this.scopeData[index].userId
+      let sessionToken = this.$store.state.userInfo.sessionToken
+      util.ajax.post('/denyScope', { userId, sessionToken }).then(({data}) => {
+          this.scopeData[index].scopeStatus = 0
+      })
     }
   }
 };

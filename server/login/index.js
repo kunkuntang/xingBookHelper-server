@@ -9,11 +9,29 @@ const login = (req, res) => {
     method: 'GET',
   }).then(({ data }) => {
     console.log(data)
-    req.session.userInfo = data
-    res.json({ status: 1, mes: '登陆成功！', ...data })
+    getUserRole(data.belongUserRole.objectId, (userRoleData) => {
+
+      console.log(userRoleData)
+      data.scopeStatus = userRoleData.scopeStatus
+      data.scoped = userRoleData.scoped
+      data.roleNum = userRoleData.roleNum
+      data.applyClassStatus = userRoleData.applyClassStatus
+      req.session.userInfo = data
+      res.json({ status: 1, mes: '登陆成功！', ...data })
+    })
   }).catch((err) => {
-    console.log(err.response.data)
+    console.log(err)
     res.json({ status: 0, mes: '用户名或密码错误' })
+  })
+}
+
+const getUserRole = (userRoleId, cb) => {
+  console.log('userRoleId', userRoleId)
+  utils.bookAjax.get('userRole/' + userRoleId).then(({ data }) => {
+    console.log('userRoledata', data)
+    cb(data)
+  }).catch(err => {
+    console.log(err)
   })
 }
 
@@ -29,6 +47,23 @@ const checkLogin = (req, res) => {
 const logout = (req, res) => {
   req.session.userInfo = ''
   res.send({ status: 1 })
+}
+
+const updateUserToken = (req, res) => {
+  let { userId, sessionToken } = req.body
+  console.log('userId', userId)
+  console.log('sessionToken', sessionToken)
+
+  utils.bookAjax.post('userSessionToken', {
+    sessionToken,
+    belongUser: {
+      __type: "Pointer",
+      className: '_User',
+      objectId: userId
+    }
+  }).then(data => {
+    console.log(data)
+  })
 }
 
 const getContactInfo = (req, res) => {
@@ -99,10 +134,11 @@ const updateUserInfo = (req, res) => {
   })
 }
 
+// 申请权限
 const updateUserScope = (req, res) => {
-  let { userId, sessionToken, scopeStatus, scoped, position } = req.body
+  let { userId, sessionToken, scoped, position } = req.body
   utils.createAjax({ sessionToken }).put('userRole?where={ "belongUser": "' + userId + '"}', {
-    scopeStatus,
+    scopeStatus: 1,
     scoped,
     position
   }).then((response) => {
@@ -117,6 +153,7 @@ const updateUserScope = (req, res) => {
   })
 }
 
+// 获取当前权限
 const getUserScope = (req, res) => {
   utils.bookAjax.get('userRole?where={"scopeStatus": {"$gt": -1}}&include=belongUser').then(({ data }) => {
     console.log(data)
@@ -126,6 +163,7 @@ const getUserScope = (req, res) => {
   })
 }
 
+// 超级管理员 通过普通用户申请的权限
 const passScope = (req, res) => {
   let { sessionToken, userId } = req.body
     // utils.createAjax({ sessionToken }).put('_User/' + userId, {
@@ -142,6 +180,7 @@ const passScope = (req, res) => {
   })
 }
 
+// 超级管理员 驳回通用户申请的权限
 const denyScope = (req, res) => {
   let { sessionToken, userId } = req.body
   console.log('sessionToken', sessionToken)
@@ -158,9 +197,35 @@ const denyScope = (req, res) => {
   })
 }
 
+// 班级管理员、团体管理员 通过普通用户的加入请求
+const passJoinRequest = (req, res) => {
+  let { userRoleId } = req.body
+  utils.bookAjax.put('userRole/' + userRoleId, {
+    applyClassStatus: 2
+  }).then(({ data }) => {
+    res.json(data)
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
+// 班级管理员、团体管理员 驳回普通用户的加入请求
+const denyJoinRequest = (req, res) => {
+  let { userRoleId } = req.body
+  utils.bookAjax.put('userRole/' + userRoleId, {
+    applyClassStatus: 0
+  }).then(({ data }) => {
+    res.json(data)
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
+
 module.exports = {
   login: login,
   checkLogin: checkLogin,
+  updateUserToken,
   logout: logout,
   getContactInfo: getContactInfo,
   getUserInfo: getUserInfo,
@@ -168,5 +233,7 @@ module.exports = {
   updateUserScope,
   getUserScope,
   passScope,
-  denyScope
+  denyScope,
+  passJoinRequest,
+  denyJoinRequest
 }

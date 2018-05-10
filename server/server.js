@@ -12,13 +12,16 @@ const {
   login,
   checkLogin,
   logout,
+  updateUserToken,
   getContactInfo,
   getUserInfo,
   updateUserInfo,
   updateUserScope,
   getUserScope,
   passScope,
-  denyScope
+  denyScope,
+  passJoinRequest,
+  denyJoinRequest
 } = require('./login/index')
 
 const {
@@ -76,6 +79,12 @@ app.post('/checkLogin', checkLogin)
 app.post('/login', login)
 
 app.get('/logout', logout)
+
+app.post('/updateUserToken', updateUserToken)
+
+app.post('/passJoinRequest', passJoinRequest)
+
+app.post('/denyJoinRequest', denyJoinRequest)
 
 // 购书模块
 app.post('/addAcademy', addAcademy)
@@ -137,6 +146,14 @@ app.get('/getUserList', getUserList)
 
 // 通讯录模块
 app.get('/contactList', contactList)
+
+app.get('/getBookInfo', (req, res) => {
+  console.log(req.query.bookIsbn)
+  utils.bookAjax.get('https://api.douban.com/v2/book/isbn/' + bookIsbn).then((data) => {
+    console.log(data)
+    res.send(data)
+  })
+})
 
 var server = app.listen(8010, function() {
   var host = server.address().address;

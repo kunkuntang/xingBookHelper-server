@@ -145,7 +145,7 @@ export default {
   },
   mounted: function() {
     setTimeout(() => {
-        if (this.userInfo.role || this.userInfo.role >= 110) {
+        if (this.userInfo.role && this.userInfo.role >= 110) {
             this.isAdmin = true
         }
         this.userName = this.userInfo.stuName

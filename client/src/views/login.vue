@@ -48,7 +48,10 @@ import { mapMutations } from 'vuex'
                 belongMajorId: data.belongMajor.objectId,
                 majorName: data.belongMajorName,
                 belongClass: data.belongClass,
-                role: data.role,
+                role: data.roleNum,
+                scopeStatus: data.scopeStatus,
+                scoped: data.scoped,
+                applyClassStatus: data.applyClassStatus,
                 userId: data.objectId,
                 sessionToken: data.sessionToken
               })
@@ -56,9 +59,16 @@ import { mapMutations } from 'vuex'
             } else {
               this.$Message.error('用户名或密码错误！');
             }
+            // this.updateSessionToken(data.objectId, data.sessionToken)
           }).catch((err) => {
             console.log(err)
           })
+        },
+        updateSessionToken(userId, sessionToken) {
+          util.ajax.post('updateUserToken', {
+            userId,
+            sessionToken
+          }).then().catch(err => console.log(err))
         },
         ...mapMutations([
             'updateUserInfo'

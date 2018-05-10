@@ -37,7 +37,10 @@ export default {
                         belongMajorId: userInfo.belongMajor.objectId,
                         majorName: userInfo.belongMajorName,
                         belongClass: userInfo.belongClass,
-                        role: userInfo.role || 0,
+                        role: userInfo.roleNum || 0,
+                        scopeStatus: userInfo.scopeStatus || -1,
+                        scoped: userInfo.scoped || [],
+                        applyClassStatus: userInfo.applyClassStatus || -1,
                         sessionToken: userInfo.sessionToken,
                         userId: userInfo.objectId
                     })
